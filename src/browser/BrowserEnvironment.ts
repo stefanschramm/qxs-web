@@ -16,7 +16,7 @@ export class BrowserEnvironment implements Environment {
   }
 
   public getNamespaces(): NamespaceSource[] {
-    return [`.${this.getCountry()}`, this.getLanguage(), 'o'];
+    return ['o', this.getLanguage(), `.${this.getCountry()}`];
   }
 
   public getCountry(): string {
