@@ -13,7 +13,8 @@ addEventListener('load', () => new WebsiteInputHandler());
 class WebsiteInputHandler {
   private readonly input = document.getElementById('textInput') as HTMLInputElement;
   private readonly status = document.getElementById('status') as HTMLDivElement;
-  private readonly queryProcessor: any; // TODO
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private readonly queryProcessor: any; // TODO: Export QueryProcessor type in qxs?
 
   public constructor() {
     const hashParameters = this.getHashParameters();
