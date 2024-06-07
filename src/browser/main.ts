@@ -15,12 +15,20 @@ class WebsiteInputHandler {
   private readonly input = document.getElementById('textInput') as HTMLInputElement;
   private readonly status = document.getElementById('status') as HTMLDivElement;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private readonly queryProcessor: any; // TODO: Export QueryProcessor type in qxs?
+  private queryProcessor: any; // TODO: Export QueryProcessor type in qxs?
   private readonly logger = new BrowserLogger();
 
   public constructor() {
     qxs.Logger.setHandler(this.logger);
     qxs.Logger.setVerbosity(3);
+    window.onhashchange = () => {
+      this.load();
+    };
+    this.load();
+  }
+
+  private load(): void {
+    qxs.Logger.debug('Initializing');
     const hashParameters = this.getHashParameters();
     const environment = new BrowserEnvironment(hashParameters);
     const namespaceDispatcher = new qxs.NamespaceDispatcher([
@@ -86,6 +94,9 @@ class WebsiteInputHandler {
     const pairs = window.location.hash.substring(1).split('&');
     for (const pair of pairs) {
       const [k, v] = pair.split('=');
+      if (v === undefined) {
+        continue; // invalid syntax
+      }
       parameters[k] = decodeURI(v.replace(/\+/g, ' '));
     }
 
