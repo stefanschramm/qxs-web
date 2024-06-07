@@ -1,5 +1,6 @@
 import qxs from '@stefanschramm/qxs';
 import { BrowserEnvironment } from './BrowserEnvironment';
+import { BrowserLogger } from './BrowserLogger';
 
 addEventListener('load', () => new WebsiteInputHandler());
 
@@ -15,8 +16,11 @@ class WebsiteInputHandler {
   private readonly status = document.getElementById('status') as HTMLDivElement;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private readonly queryProcessor: any; // TODO: Export QueryProcessor type in qxs?
+  private readonly logger = new BrowserLogger();
 
   public constructor() {
+    qxs.Logger.setHandler(this.logger);
+    qxs.Logger.setVerbosity(3);
     const hashParameters = this.getHashParameters();
     const environment = new BrowserEnvironment(hashParameters);
     const namespaceDispatcher = new qxs.NamespaceDispatcher([
