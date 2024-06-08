@@ -2,21 +2,59 @@
   <head>
     <title>qxs.kesto.de</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
     <script type="module" src="src/browser/main.ts"></script>
     <style>
 body, input {
   font-family: monospace;
 }
 
+a {
+  text-decoration: none;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.row div, .row input {
+  padding: 0.5rem;
+  margin: 0.2rem;
+}
+
+.row div.grow, input.grow{
+  flex-grow: 1;
+}
+
+.title {
+  font-weight: bold;
+}
+
 input {
-  border: 1px solid #999999;
-  margin-bottom: 1em;
+  border: 1px solid #dddddd;
+}
+
+#status {
+  word-break: break-all;
 }
     </style>
   </head>
   <body>
-    <input id="textInput" type="text" />
-    <input id="submitButton" type="submit" value="Go!" />
-    <div id="status"></div>
+    <div class="row">
+      <div class="title grow">qxs.kesto.de</div>
+      <div>
+        <a href="https://github.com/stefanschramm/qxs-web" target="_blank">about</a>
+        |
+        <a href="https://stefanschramm.net/" target="_blank">contact / legal info</a>
+      </div>
+    </div>
+    <div class="row">
+      <input class="grow" id="textInput" type="text" />
+      <input id="submitButton" type="submit" value="Go!" />
+    </div>
+    <div class="row">
+      <div id="status"></div>
+    </div>
   </body>
 </html>
