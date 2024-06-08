@@ -97,7 +97,7 @@ class WebsiteInputHandler {
       if (v === undefined) {
         continue; // invalid syntax
       }
-      parameters[k] = decodeURI(v.replace(/\+/g, ' '));
+      parameters[k] = decodeURIComponent(v.replace(/\+/g, '%20'));
     }
 
     return parameters;
