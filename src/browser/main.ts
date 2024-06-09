@@ -48,13 +48,13 @@ class WebsiteInputHandler {
       if (!button) {
         return;
       }
-      button.onclick = () => {
-        this.handleInput();
+      button.onclick = (ev) => {
+        this.handleInput(ev.ctrlKey);
       };
 
       this.input.onkeyup = (ev) => {
         if (ev.key === 'Enter') {
-          this.handleInput();
+          this.handleInput(ev.ctrlKey);
         } else {
           this.refresh();
         }
@@ -115,13 +115,21 @@ class WebsiteInputHandler {
     }
   }
 
-  private async handleInput() {
+  private async handleInput(newTab: boolean = false) {
     const result = await this.queryProcessor.process(this.input?.value ?? '');
 
     if (result.status === qxs.QueryProcessingResultStatus.Success) {
       if (result.url !== undefined) {
-        window.open(result.url, '_blank');
-        this.input.value = '';
+        if (newTab) {
+          this.input.value = '';
+          window.setTimeout(() => {
+            // Timeout to create new tab instead of new window
+            window.open(result.url, '_blank');
+          }, 1);
+        } else {
+          this.status.textContent = `Loading ${result.url}...`;
+          document.location = result.url;
+        }
       }
     } else {
       console.error(result);
