@@ -6,10 +6,10 @@ https://qxs.kesto.de/
 
 ## Usage (Examples)
 
-    qxs w Berlin
-    qxs en.w Berlin
-    qxs bvg Alexanderplatz, Hermannplatz
-    qxs yt kitten
+    w Berlin
+    en.w Berlin
+    bvg Alexanderplatz, Hermannplatz
+    yt kitten
 
 You can browse the full database of shortcuts at [trovu.net](https://trovu.net/).
 
