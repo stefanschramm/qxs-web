@@ -41,47 +41,28 @@ class WebsiteInputHandler {
 
     this.queryProcessor = new qxs.QueryProcessor(environment, shortcutDatabase);
 
-    if (this.isProcessPage()) {
-      this.processProcessPage(hashParameters['query']);
-    } else {
-      const button = document.getElementById('submitButton');
-      if (!button) {
-        return;
-      }
-      button.onclick = (ev) => {
-        this.handleInput(ev.ctrlKey);
-      };
-
-      this.input.onkeyup = (ev) => {
-        if (ev.key === 'Enter') {
-          this.handleInput(ev.ctrlKey);
-        } else {
-          this.refresh();
-        }
-      };
-      this.input.focus();
-    }
-  }
-
-  private isProcessPage(): boolean {
-    return document.getElementById('process') !== null;
-  }
-
-  private async processProcessPage(query: string | undefined) {
-    if (query === undefined) {
-      alert('query parameter was not set.');
+    const button = document.getElementById('submitButton');
+    if (!button) {
       return;
     }
-    const result = await this.queryProcessor.process(query);
+    button.onclick = (ev) => {
+      this.handleInput(ev.ctrlKey);
+    };
 
-    if (result.status === qxs.QueryProcessingResultStatus.Success) {
-      if (result.url !== undefined) {
-        document.body.innerHTML = `Loading ${result.url}`;
-        document.location.href = result.url;
+    this.input.onkeyup = (ev) => {
+      if (ev.key === 'Enter') {
+        this.handleInput(ev.ctrlKey);
+      } else {
+        this.refresh();
       }
-    } else {
-      console.error(result);
-      alert('Not found / problem.');
+    };
+
+    this.input.focus();
+
+    if (hashParameters['query'] !== undefined) {
+      // Used as process page
+      this.input.value = hashParameters['query'];
+      this.handleInput(false);
     }
   }
 
