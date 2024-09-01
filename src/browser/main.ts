@@ -9,7 +9,7 @@ addEventListener('load', () => new WebsiteInputHandler());
  *
  * The automatic processing page is called like this:
  *
- * http://localhost:5173/process/#country=de&language=de&query=w+Berlin
+ * http://localhost:5173/#country=de&language=de&query=w+Berlin
  */
 class WebsiteInputHandler {
   private readonly input = document.getElementById('textInput') as HTMLInputElement;
@@ -97,6 +97,7 @@ class WebsiteInputHandler {
   }
 
   private async handleInput(newTab: boolean = false) {
+    this.status.textContent = 'Processing query...';
     const result = await this.queryProcessor.process(this.input?.value ?? '');
 
     if (result.status === qxs.QueryProcessingResultStatus.Success) {
@@ -113,6 +114,7 @@ class WebsiteInputHandler {
         }
       }
     } else {
+      this.status.textContent = 'Error';
       console.error(result);
       alert('Not found / problem.');
     }
