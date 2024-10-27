@@ -14,8 +14,12 @@ addEventListener('load', () => new WebsiteInputHandler());
 class WebsiteInputHandler {
   private readonly input = document.getElementById('textInput') as HTMLInputElement;
   private readonly status = document.getElementById('status') as HTMLDivElement;
+  private readonly searchResults = document.getElementById('searchResults') as HTMLDivElement;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private shortcutDatabase: any; // TODO: Export ShortcutDatabase type in qxs?
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private queryProcessor: any; // TODO: Export QueryProcessor type in qxs?
+  private environment: BrowserEnvironment;
   private readonly logger = new BrowserLogger();
 
   public constructor() {
@@ -30,16 +34,15 @@ class WebsiteInputHandler {
   private load(): void {
     qxs.Logger.debug('Initializing');
     const hashParameters = this.getHashParameters();
-    const environment = new BrowserEnvironment(hashParameters);
+    this.environment = new BrowserEnvironment(hashParameters);
     const namespaceDispatcher = new qxs.NamespaceDispatcher([
       new qxs.RemoteSingleJsonNamespaceSourceHandler('/data.json'),
       new qxs.InPlaceNamespaceSourceHandler(),
       new qxs.UrlNamespaceSourceHandler(),
       new qxs.GithubNamespaceSourceHandler(),
     ]);
-    const shortcutDatabase = new qxs.ObjectShortcutDatabase(namespaceDispatcher);
-
-    this.queryProcessor = new qxs.QueryProcessor(environment, shortcutDatabase);
+    this.shortcutDatabase = new qxs.ObjectShortcutDatabase(namespaceDispatcher);
+    this.queryProcessor = new qxs.QueryProcessor(this.environment, this.shortcutDatabase);
 
     const button = document.getElementById('submitButton');
     if (!button) {
@@ -88,11 +91,36 @@ class WebsiteInputHandler {
     const result = await this.queryProcessor.process(this.input?.value ?? '');
     switch (result.status) {
       case qxs.QueryProcessingResultStatus.Success:
+        this.searchResults.innerHTML = '';
         this.status.textContent = '-> ' + result.url;
         break;
       default:
         this.status.textContent = '?';
+        if (this.input?.value !== undefined && this.input?.value !== '' && this.input.value.length > 2) {
+          this.search(this.input.value);
+        } else {
+          this.searchResults.innerHTML = '';
+        }
         break;
+    }
+  }
+
+  private async search(query: string) {
+    const results = await this.shortcutDatabase.search(
+      query,
+      this.environment.getLanguage(),
+      this.environment.getNamespaces(),
+    );
+
+    this.searchResults.innerHTML = '';
+    for (const k in results) {
+      const shortcut = results[k];
+      const entry = document.createElement('div');
+      const keyword = document.createElement('b');
+      keyword.appendChild(document.createTextNode(`${k}: `));
+      entry.appendChild(keyword);
+      entry.appendChild(document.createTextNode(shortcut.title));
+      this.searchResults.appendChild(entry);
     }
   }
 
