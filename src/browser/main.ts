@@ -115,12 +115,15 @@ class WebsiteInputHandler {
     this.searchResults.innerHTML = '';
     for (const k in results) {
       const shortcut = results[k];
-      const entry = document.createElement('div');
-      const keyword = document.createElement('b');
-      keyword.appendChild(document.createTextNode(`${k}: `));
-      entry.appendChild(keyword);
-      entry.appendChild(document.createTextNode(shortcut.title));
-      this.searchResults.appendChild(entry);
+      const keyword = k.split(' ')[0];
+      const entryElement = document.createElement('div');
+      const keywordElement = document.createElement('b');
+      const args = shortcut.url === undefined ? [] : qxs.getArgumentPlaceholderNames(shortcut.url);
+      const keywordText = args.length > 0 ? `${keyword} ${args.join(', ')}: ` : `${keyword}: `;
+      keywordElement.appendChild(document.createTextNode(keywordText));
+      entryElement.appendChild(keywordElement);
+      entryElement.appendChild(document.createTextNode(shortcut.title));
+      this.searchResults.appendChild(entryElement);
     }
   }
 
