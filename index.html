@@ -7,6 +7,7 @@
     <style>
 body, input {
   font-family: monospace;
+  font-size: 10pt;
 }
 
 a {
@@ -44,8 +45,8 @@ input {
   word-break: break-all;
 }
 
-#searchResults div {
-  margin-bottom: 0.4rem;
+#searchResults dt {
+  font-weight: bold;
 }
     </style>
   </head>
@@ -65,6 +66,6 @@ input {
     <div class="row">
       <div id="status"></div>
     </div>
-    <div class="padded" id="searchResults"></div>
+    <dl class="padded" id="searchResults"></dl>
   </body>
 </html>
